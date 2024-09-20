@@ -48,6 +48,11 @@ mkdir -p heart_fetal8
 mkdir -p heart_fetal9
 #https://www.encodeproject.org/files/ENCFF930KQD/@@download/ENCFF930KQD.tar.gz
 
+# note: for some reason heart fetal .tar.gz files doesn't have the encode_scatac_dcc_2 folder, it goes straight to results. 
+#       need to make it manually to match directories with other tissues
+mkdir -p encode_scatac_dcc_2
+mv results encode_scatac_dcc_2
+
 # heart_fetal 
 #sample_IDs=("ENCSR515SNH" "ENCSR715JSZ" "ENCSR282FAK" "ENCSR890TGR" "ENCSR024TGD" "ENCSR004IAY" "ENCSR376IBI" "ENCSR306FRQ" "ENCSR805DID")
 #sample_n=("1" "2" "3" "4" "5" "6" "7" "8" "9")
