@@ -15,6 +15,6 @@ mkdir -p left_colon2
 mkdir -p left_colon3
 
 # left colon
-#sample_IDs=("ENCSR830FPR" "ENCSR916RYB" "ENCSR904WIW")
+#sample_IDs=("ENCSR830FPR-1" "ENCSR916RYB-1" "ENCSR904WIW-1")
 #sample_n=("1" "2" "3")
 #cell_type="left_colon"

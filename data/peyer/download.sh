@@ -13,6 +13,6 @@ mkdir -p peyer2
 mkdir -p peyer3
 
 # peyer's patch
-#sample_IDs=("ENCSR052DKH" "ENCSR652WJE" "ENCSR101JHK")
+#sample_IDs=("ENCSR052DKH-1" "ENCSR652WJE-1" "ENCSR101JHK-1")
 #sample_n=("1" "2" "3")
 #cell_type="peyer"

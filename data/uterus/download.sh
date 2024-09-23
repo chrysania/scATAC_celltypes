@@ -16,6 +16,6 @@ mkdir -p uterus2
 mkdir -p uterus3
 
 # uterus
-#sample_IDs=("ENCSR828HVB" "ENCSR455CVZ" "ENCSR028RFK")
+#sample_IDs=("ENCSR828HVB-1" "ENCSR455CVZ-1" "ENCSR028RFK-1")
 #sample_n=("1" "2" "3")
 #cell_type="uterus"

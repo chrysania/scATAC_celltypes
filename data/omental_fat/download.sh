@@ -16,6 +16,6 @@ mkdir -p omental_fat3
 mkdir -p omental_fat4
 
 # omental fat pad
-#sample_IDs=("ENCSR181XXQ" "ENCSR492GGN" "ENCSR644SCP" "ENCSR274HQD")
+#sample_IDs=("ENCSR181XXQ-1" "ENCSR492GGN-1" "ENCSR644SCP-1" "ENCSR274HQD-1")
 #sample_n=("1" "2" "3" "4")
 #cell_type="omental_fat"

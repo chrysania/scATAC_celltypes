@@ -13,6 +13,6 @@ mkdir -p esophagus2
 mkdir -p esophagus3
 
 # esophagus
-#sample_IDs=("ENCSR453TVZ" "ENCSR757EGB" "ENCSR164GSH")
+#sample_IDs=("ENCSR453TVZ-1" "ENCSR757EGB-1" "ENCSR164GSH-1")
 #sample_n=("1" "2" "3")
 #cell_type="esophagus"

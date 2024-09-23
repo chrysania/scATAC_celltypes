@@ -54,6 +54,6 @@ mkdir -p encode_scatac_dcc_2
 mv results encode_scatac_dcc_2
 
 # heart_fetal 
-#sample_IDs=("ENCSR515SNH" "ENCSR715JSZ" "ENCSR282FAK" "ENCSR890TGR" "ENCSR024TGD" "ENCSR004IAY" "ENCSR376IBI" "ENCSR306FRQ" "ENCSR805DID")
+#sample_IDs=("ENCSR515SNH-1" "ENCSR715JSZ-1" "ENCSR282FAK-1" "ENCSR890TGR-1" "ENCSR024TGD-1" "ENCSR004IAY-1" "ENCSR376IBI-1" "ENCSR306FRQ-1" "ENCSR805DID-1")
 #sample_n=("1" "2" "3" "4" "5" "6" "7" "8" "9")
 #cell_type="heart_fetal"

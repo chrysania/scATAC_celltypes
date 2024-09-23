@@ -13,6 +13,6 @@ mkdir -p tibial_nerve2
 mkdir -p tibial_nerve3
 
 # tibial nerve
-#sample_IDs=("ENCSR205TUH" "ENCSR453BVR" "ENCSR726QTF")
+#sample_IDs=("ENCSR205TUH-1" "ENCSR453BVR-1" "ENCSR726QTF-1")
 #sample_n=("1" "2" "3")
 #cell_type="tibial_nerve"

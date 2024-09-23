@@ -16,6 +16,6 @@ mkdir -p stomach3
 mkdir -p stomach4
 
 # stomach
-#sample_IDs=("ENCSR848EID" "ENCSR549JEQ" "ENCSR266ZPZ" "ENCSR940QRM")
+#sample_IDs=("ENCSR848EID-1" "ENCSR549JEQ-1" "ENCSR266ZPZ-1" "ENCSR940QRM-1")
 #sample_n=("1" "2" "3" "4")
 #cell_type="stomach"

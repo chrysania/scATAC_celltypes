@@ -1,4 +1,4 @@
-cd ~/scratch/scATAC_celltypes/data/muscle2
+cd ~/scratch/scATAC_celltypes/data/leg_muscle
 
 # ATAC fragments
 wget https://www.encodeproject.org/files/ENCFF469KDC/@@download/ENCFF469KDC.tar.gz #1
@@ -12,13 +12,13 @@ tar -xzvf ENCFF982BFF.tar.gz
 tar -xzvf ENCFF223JJZ.tar.gz
 tar -xzvf ENCFF623EVG.tar.gz
 
-mkdir -p muscle1
-mkdir -p muscle2
-mkdir -p muscle3
-mkdir -p muscle4
-mkdir -p muscle5
+mkdir -p leg_muscle1
+mkdir -p leg_muscle2
+mkdir -p leg_muscle3
+mkdir -p leg_muscle4
+mkdir -p leg_muscle5
 
-# gastrocnemius medialis (muscle2)
-#sample_IDs=("ENCSR696YOC" "ENCSR819EGE" "ENCSR244GZL" "ENCSR023FME" "ENCSR139TIQ")
+# gastrocnemius medialis (leg_muscle)
+#sample_IDs=("ENCSR696YOC-1" "ENCSR819EGE-1" "ENCSR244GZL-1" "ENCSR023FME-1" "ENCSR139TIQ-1")
 #sample_n=("1" "2" "3" "4" "5")
-#cell_type="muscle2"
+#cell_type="leg_muscle"

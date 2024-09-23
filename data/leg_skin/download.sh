@@ -16,6 +16,6 @@ mkdir -p leg_skin3
 mkdir -p leg_skin4
 
 # lower leg skin
-#sample_IDs=("ENCSR733SZL" "ENCSR397ODX" "ENCSR474TGL" "ENCSR513HZN")
+#sample_IDs=("ENCSR733SZL-1" "ENCSR397ODX-1" "ENCSR474TGL-1" "ENCSR513HZN-1")
 #sample_n=("1" "2" "3" "4")
 #cell_type="leg_skin"

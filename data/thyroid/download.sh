@@ -13,6 +13,6 @@ mkdir -p thyroid2
 mkdir -p thyroid3
 
 # thyroid
-#sample_IDs=("ENCSR796RXX" "ENCSR909OXO" "ENCSR817VFO")
+#sample_IDs=("ENCSR796RXX-1" "ENCSR909OXO-1" "ENCSR817VFO-1")
 #sample_n=("1" "2" "3")
 #cell_type="thyroid"

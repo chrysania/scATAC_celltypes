@@ -19,6 +19,6 @@ mkdir -p transverse_colon4
 mkdir -p transverse_colon5
 
 # transverse colon
-#sample_IDs=("ENCSR434SXE" "ENCSR997YNO" "ENCSR506YMX" "ENCSR007QIO" "ENCSR349XKD")
+#sample_IDs=("ENCSR434SXE-1" "ENCSR997YNO-1" "ENCSR506YMX-1" "ENCSR007QIO-1" "ENCSR349XKD-1")
 #sample_n=("1" "2" "3" "4" "5")
 #cell_type="transverse_colon"
