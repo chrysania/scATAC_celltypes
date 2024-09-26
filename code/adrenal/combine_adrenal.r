@@ -1,4 +1,8 @@
 # combine_adrenal.r
+# dataset 1 2
+
+cell_type <- "adrenal"
+sample_id <- c(1,2)
 
 setwd('/charonfs/scratch/users/astar/gis/limchr/scATAC_celltypes/code')
 library(Signac)
@@ -11,128 +15,99 @@ library(GenomicRanges)
 source("utilities.R")
 library(tidyr)
 
-adrenal1 <- readRDS("../data/adrenal/adrenal1/adrenal1_preQC.rds")
-adrenal2 <- readRDS("../data/adrenal/adrenal2/adrenal2_preQC.rds")
-adrenal3 <- readRDS("../data/adrenal/adrenal3/adrenal3_preQC.rds")
+ct_1 <- readRDS(paste0("../data/",cell_type,"/",cell_type,sample_id[1],"/",cell_type,sample_id[1],"_preQC.rds"))
+ct_2 <- readRDS(paste0("../data/",cell_type,"/",cell_type,sample_id[2],"/",cell_type,sample_id[2],"_preQC.rds"))
 
 ### QC ###
-adrenal1_qc <- subset(adrenal1, subset = nCount_ATAC > 3000 & nCount_ATAC < 75000 &
-              TSS.enrichment > 3.5 &
+ct_1_qc <- subset(ct_1, subset = nCount_ATAC > 6000 & nCount_ATAC < 75000 &
+              TSS.enrichment > 4 &
               nucleosome_signal < 1)
-adrenal1_qc
-adrenal2_qc <- subset(adrenal2, subset = nCount_ATAC > 3000 & nCount_ATAC < 100000 &
-              TSS.enrichment > 3 &
+ct_1_qc
+ct_2_qc <- subset(ct_2, subset = nCount_ATAC > 5000 & nCount_ATAC < 75000 &
+              TSS.enrichment > 4 &
               nucleosome_signal < 1)
-adrenal2_qc
-adrenal3_qc <- subset(adrenal3, subset = nCount_ATAC > 2000 & nCount_ATAC < 60000 &
-              TSS.enrichment > 3 &
-              nucleosome_signal < 1)
-adrenal3_qc
+ct_2_qc
+
 
 ### Combine ###
 # create common peak set
-rownames_adrenal <- rownames(adrenal1_qc)
-split_chr_coords <- strsplit(rownames_adrenal, "-")
-adrenal_coordinates <- do.call(rbind, lapply(split_chr_coords, function(x) {
-  c(x[1], x[2], x[3])
-}))
-adrenal1_features <- as.data.frame(adrenal_coordinates, stringsAsFactors = FALSE)
-colnames(adrenal1_features) <- c("chr", "start", "end")
-adrenal1_features$start <- as.numeric(adrenal1_features$start)
-adrenal1_features$end <- as.numeric(adrenal1_features$end)
-adrenal1_features_clean <- na.omit(adrenal1_features)
-gr.adrenal1 <- makeGRangesFromDataFrame(adrenal1_features_clean)
+rownames_list <- list()
+rownames_list[[1]] <- rownames(ct_1_qc)
+rownames_list[[2]] <- rownames(ct_2_qc)
 
-rownames_adrenal <- rownames(adrenal2_qc)
-split_chr_coords <- strsplit(rownames_adrenal, "-")
-adrenal_coordinates <- do.call(rbind, lapply(split_chr_coords, function(x) {
-  c(x[1], x[2], x[3])
-}))
-adrenal2_features <- as.data.frame(adrenal_coordinates, stringsAsFactors = FALSE)
-colnames(adrenal2_features) <- c("chr", "start", "end")
-adrenal2_features$start <- as.numeric(adrenal2_features$start)
-adrenal2_features$end <- as.numeric(adrenal2_features$end)
-adrenal2_features_clean <- na.omit(adrenal2_features)
-gr.adrenal2 <- makeGRangesFromDataFrame(adrenal2_features_clean)
+gr_list <- list()
+for (i in 1:length(sample_id)) {
+    rownames_obj <- rownames_list[[i]]
+    split_chr_coords <- strsplit(rownames_obj, "-")
+    obj_coordinates <- do.call(rbind, lapply(split_chr_coords, function(x) {
+      c(x[1], x[2], x[3])
+    }))
+    obj_features <- as.data.frame(obj_coordinates, stringsAsFactors = FALSE)
+    colnames(obj_features) <- c("chr", "start", "end")
+    obj_features$start <- as.numeric(obj_features$start)
+    obj_features$end <- as.numeric(obj_features$end)
+    obj_features_clean <- na.omit(obj_features)
+    gr <- makeGRangesFromDataFrame(obj_features_clean)
 
-rownames_adrenal <- rownames(adrenal3_qc)
-split_chr_coords <- strsplit(rownames_adrenal, "-")
-adrenal_coordinates <- do.call(rbind, lapply(split_chr_coords, function(x) {
-  c(x[1], x[2], x[3])
-}))
-adrenal3_features <- as.data.frame(adrenal_coordinates, stringsAsFactors = FALSE)
-colnames(adrenal3_features) <- c("chr", "start", "end")
-adrenal3_features$start <- as.numeric(adrenal3_features$start)
-adrenal3_features$end <- as.numeric(adrenal3_features$end)
-adrenal3_features_clean <- na.omit(adrenal3_features)
-gr.adrenal3 <- makeGRangesFromDataFrame(adrenal3_features_clean)
+    gr_list[[i]] <- gr
+}
 
-combined.peaks <- reduce(x = c(gr.adrenal1, gr.adrenal2, gr.adrenal3))
+combined.peaks <- reduce(x = c(gr_list[[1]], gr_list[[2]]))
 peakwidths <- width(combined.peaks)
 combined.peaks <- combined.peaks[peakwidths  < 10000 & peakwidths > 20]
 combined.peaks
 
 # create new seurat obj
 # adrenal gland
-#sample_IDs=("ENCSR420EWQ-1" "ENCSR693GAD-1" "ENCSR194KHA-1")
+sample_IDs <- c("ENCSR420EWQ-1","ENCSR693GAD-1","ENCSR194KHA-1")
 #sample_n=("1" "2" "3")
 #cell_type="adrenal"
 
+colnames_list <- list()
+colnames_list[[1]] <- colnames(ct_1_qc)
+colnames_list[[2]] <- colnames(ct_2_qc)
+
 # create fragment objects
-frags.adrenal1 <- CreateFragmentObject(
-  path = "../data/adrenal/encode_scatac_dcc_2/results/ENCSR420EWQ-1/fragments/fragments.tsv.gz",
-  cells = colnames(adrenal1_qc)
+frags.1 <- CreateFragmentObject(
+  path = paste0("../data/",cell_type,"/encode_scatac_dcc_2/results/",sample_IDs[sample_id[1]],"/fragments/fragments.tsv.gz"),
+  cells = colnames_list[[1]]
 )
-frags.adrenal2 <- CreateFragmentObject(
-  path = "../data/adrenal/encode_scatac_dcc_2/results/ENCSR693GAD-1/fragments/fragments.tsv.gz",
-  cells = colnames(adrenal2_qc)
-)
-frags.adrenal3 <- CreateFragmentObject(
-  path = "../data/adrenal/encode_scatac_dcc_2/results/ENCSR194KHA-1/fragments/fragments.tsv.gz",
-  cells = colnames(adrenal3_qc)
+frags.2 <- CreateFragmentObject(
+  path = paste0("../data/",cell_type,"/encode_scatac_dcc_2/results/",sample_IDs[sample_id[2]],"/fragments/fragments.tsv.gz"),
+  cells = colnames_list[[2]]
 )
 
 # create peak x cell matrix
-counts.adrenal1 <- FeatureMatrix(
-  fragments = frags.adrenal1,
+counts.1 <- FeatureMatrix(
+  fragments = frags.1,
   features = combined.peaks,
-  cells = colnames(adrenal1_qc)
+  cells = colnames_list[[1]]
 )
-counts.adrenal2 <- FeatureMatrix(
-  fragments = frags.adrenal2,
+counts.2 <- FeatureMatrix(
+  fragments = frags.2,
   features = combined.peaks,
-  cells = colnames(adrenal2_qc)
-)
-counts.adrenal3 <- FeatureMatrix(
-  fragments = frags.adrenal3,
-  features = combined.peaks,
-  cells = colnames(adrenal3_qc)
+  cells = colnames_list[[2]]
 )
 
 # create new seurat obj with combined.peaks
-adrenal1_assay <- CreateChromatinAssay(counts.adrenal1, fragments = frags.adrenal1)
-adrenal1_tomerge <- CreateSeuratObject(adrenal1_assay, assay = "ATAC")
+chrom_assay1 <- CreateChromatinAssay(counts.1, fragments = frags.1)
+obj1_tomerge <- CreateSeuratObject(chrom_assay1, assay = "ATAC")
+chrom_assay2 <- CreateChromatinAssay(counts.2, fragments = frags.2)
+obj2_tomerge <- CreateSeuratObject(chrom_assay2, assay = "ATAC")
 
-adrenal2_assay <- CreateChromatinAssay(counts.adrenal2, fragments = frags.adrenal2)
-adrenal2_tomerge <- CreateSeuratObject(adrenal2_assay, assay = "ATAC")
-
-adrenal3_assay <- CreateChromatinAssay(counts.adrenal3, fragments = frags.adrenal3)
-adrenal3_tomerge <- CreateSeuratObject(adrenal3_assay, assay = "ATAC")
-
-adrenal1_tomerge
-adrenal2_tomerge
-adrenal3_tomerge
+obj1_tomerge
+obj2_tomerge
 
 # add information to identify dataset of origin
-adrenal1_tomerge$dataset <- 'adrenal1'
-adrenal2_tomerge$dataset <- 'adrenal2'
-adrenal3_tomerge$dataset <- 'adrenal3'
+obj1_tomerge$dataset <- paste0(cell_type,sample_id[1])
+obj2_tomerge$dataset <- paste0(cell_type,sample_id[2])
+
 
 # merge all datasets, adding a cell ID to make sure cell names are unique
 combined <- merge(
-  x = adrenal1_tomerge,
-  y = list(adrenal2_tomerge, adrenal3_tomerge),
-  add.cell.ids = c("1", "2", "3")
+  x = obj1_tomerge,
+  y = obj2_tomerge,
+  add.cell.ids = c("1", "2")
 )
 combined[["ATAC"]]
 
@@ -140,33 +115,35 @@ combined <- RunTFIDF(combined)
 combined <- FindTopFeatures(combined, min.cutoff = 10)
 combined <- RunSVD(combined)
 combined <- RunUMAP(combined, dims = 2:30, reduction = 'lsi')
-DimPlot(combined, group.by = 'dataset', pt.size = 0.1)
+combined <- FindNeighbors(object = combined, reduction = 'lsi', dims = 2:30)
+combined <- FindClusters(object = combined, verbose = FALSE, algorithm = 3)
 
 saveRDS(combined, file = "../data/adrenal/adrenal_combined.rds")
 
+p1 <- DimPlot(object = combined, label = TRUE) + NoLegend()
+p2 <- DimPlot(combined, group.by = 'dataset', label = TRUE) + NoLegend()
+combined_plot <- p1 | p2
+ggsave(filename = paste0("../data/plots/",cell_type,"_combined.pdf"), plot = combined_plot, height = 6, width = 12)
+
+saveRDS(combined, file = paste0("../data/",cell_type,"/",cell_type,"_combined.rds"))
+
 ### Integrate ###
-adrenal1_tomerge <- RenameCells(adrenal1_tomerge, add.cell.id = 1)
-adrenal1_tomerge <- FindTopFeatures(adrenal1_tomerge, min.cutoff = 0)
-adrenal1_tomerge <- RunTFIDF(adrenal1_tomerge)
-adrenal1_tomerge <- RunSVD(adrenal1_tomerge)
-adrenal1_tomerge <- RunUMAP(adrenal1_tomerge, dims = 2:50, reduction = 'lsi')
+obj1_tomerge <- RenameCells(obj1_tomerge, add.cell.id = 1)
+obj1_tomerge <- FindTopFeatures(obj1_tomerge, min.cutoff = 0)
+obj1_tomerge <- RunTFIDF(obj1_tomerge)
+obj1_tomerge <- RunSVD(obj1_tomerge)
+obj1_tomerge <- RunUMAP(obj1_tomerge, dims = 2:50, reduction = 'lsi')
 
-adrenal2_tomerge <- RenameCells(adrenal2_tomerge, add.cell.id = 2)
-adrenal2_tomerge <- FindTopFeatures(adrenal2_tomerge, min.cutoff = 0)
-adrenal2_tomerge <- RunTFIDF(adrenal2_tomerge)
-adrenal2_tomerge <- RunSVD(adrenal2_tomerge)
-adrenal2_tomerge <- RunUMAP(adrenal2_tomerge, dims = 2:50, reduction = 'lsi')
-
-adrenal3_tomerge <- RenameCells(adrenal3_tomerge, add.cell.id = 3)
-adrenal3_tomerge <- FindTopFeatures(adrenal3_tomerge, min.cutoff = 0)
-adrenal3_tomerge <- RunTFIDF(adrenal3_tomerge)
-adrenal3_tomerge <- RunSVD(adrenal3_tomerge)
-adrenal3_tomerge <- RunUMAP(adrenal3_tomerge, dims = 2:50, reduction = 'lsi')
+obj2_tomerge <- RenameCells(obj2_tomerge, add.cell.id = 2)
+obj2_tomerge <- FindTopFeatures(obj2_tomerge, min.cutoff = 0)
+obj2_tomerge <- RunTFIDF(obj2_tomerge)
+obj2_tomerge <- RunSVD(obj2_tomerge)
+obj2_tomerge <- RunUMAP(obj2_tomerge, dims = 2:50, reduction = 'lsi')
 
 # find integration anchors 
 integration.anchors <- FindIntegrationAnchors(
-  object.list = list(adrenal1_tomerge, adrenal2_tomerge, adrenal3_tomerge),
-  anchor.features = rownames(adrenal1_tomerge),
+  object.list = list(obj1_tomerge, obj2_tomerge),
+  anchor.features = rownames(obj1_tomerge),
   reduction = "rlsi",
   dims = 2:30
 )
@@ -180,10 +157,12 @@ integrated <- IntegrateEmbeddings(
 )
 
 integrated <- RunUMAP(integrated, reduction = "integrated_lsi", dims = 2:30)
-DimPlot(integrated, group.by = 'dataset', pt.size = 0.1)
+p1 <- DimPlot(integrated, group.by = 'dataset', pt.size = 0.1)
 
 integrated <- FindNeighbors(object = integrated, reduction = 'integrated_lsi', dims = 2:30)
 integrated <- FindClusters(object = integrated, verbose = FALSE, algorithm = 3)
-DimPlot(object = integrated, label = TRUE) + NoLegend()
+p2 <- DimPlot(object = integrated, label = TRUE) + NoLegend()
 
-saveRDS(integrated, file = "../data/adrenal/adrenal_integrated.rds")
+combined_plot <- p1 | p2
+ggsave(filename = paste0("../data/plots/",cell_type,"_integrated.pdf"), plot = combined_plot, height = 6, width = 12)
+saveRDS(integrated, file = paste0("../data/",cell_type,"/",cell_type,"_integrated.rds"))

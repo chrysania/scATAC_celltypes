@@ -21,14 +21,14 @@ ct_2 <- readRDS(paste0("../data/",cell_type,"/",cell_type,sample_id[2],"/",cell_
 
 ### QC ###
 ct_1_qc <- subset(ct_1,
-                  subset = nCount_ATAC > 7000 & nCount_ATAC < 100000 &
-                  TSS.enrichment > 3.5 &
-                  nucleosome_signal < 1.5)
+                  subset = nCount_ATAC > 7000 & nCount_ATAC < 10000 &
+                  TSS.enrichment > 4 &
+                  nucleosome_signal < 1)
 ct_1_qc
 ct_2_qc <- subset(ct_2,
                   subset = nCount_ATAC > 7000 & nCount_ATAC < 100000 &
-                  TSS.enrichment > 3.5 &
-                  nucleosome_signal < 1.5)
+                  TSS.enrichment > 4 &
+                  nucleosome_signal < 1)
 ct_2_qc
 
 
