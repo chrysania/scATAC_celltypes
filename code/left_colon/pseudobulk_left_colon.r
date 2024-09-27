@@ -13,7 +13,7 @@ library(GenomicRanges)
 source("utilities.R")
 library(tidyr)
 
-obj <- readRDS(paste0("../data/",cell_type,"/",cell_type,"_integrated.rds"))
+obj <- readRDS(paste0("../data/",cell_type,"/",cell_type,"_integrated_filtered.rds"))
 obj
 
 ccre <- read.table("../data/combined_cre.bed", sep="\t")

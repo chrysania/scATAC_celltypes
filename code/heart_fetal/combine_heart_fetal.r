@@ -219,3 +219,18 @@ p2 <- DimPlot(object = integrated, label = TRUE) + NoLegend()
 combined_plot <- p1 | p2
 ggsave(filename = paste0("../data/plots/",cell_type,"_integrated.pdf"), plot = combined_plot, height = 6, width = 12)
 saveRDS(integrated, file = paste0("../data/",cell_type,"/",cell_type,"_integrated.rds"))
+
+# change clustering resolution
+integrated_modif <- FindClusters(object = integrated, verbose = FALSE, algorithm = 3, resolution = 0.25)
+
+# filter out clusters with <100 cells
+table(integrated$seurat_clusters)
+
+# Get cluster names that have more than 100 cells
+big_clusters <- names(which(table(Idents(integrated)) >= 100))
+
+# Subset the Seurat object to exclude these small clusters
+integrated_filtered <- subset(integrated, idents = big_clusters)
+integrated_filtered
+
+saveRDS(integrated_filtered, file = paste0("../data/",cell_type,"/",cell_type,"_integrated_filtered.rds"))
