@@ -1,59 +1,73 @@
-cd ~/scratch/scATAC_celltypes/data/heart_fetal
+# download heart_fetal
 
-# ATAC fragments
-wget https://www.encodeproject.org/files/ENCFF401MVS/@@download/ENCFF401MVS.tar.gz #1
-wget https://www.encodeproject.org/files/ENCFF946HNM/@@download/ENCFF946HNM.tar.gz #2
-wget https://www.encodeproject.org/files/ENCFF904ARJ/@@download/ENCFF904ARJ.tar.gz #3
-wget https://www.encodeproject.org/files/ENCFF658TEH/@@download/ENCFF658TEH.tar.gz #4
-wget https://www.encodeproject.org/files/ENCFF908JHS/@@download/ENCFF908JHS.tar.gz #5
-wget https://www.encodeproject.org/files/ENCFF851VTB/@@download/ENCFF851VTB.tar.gz #6
-wget https://www.encodeproject.org/files/ENCFF958UTA/@@download/ENCFF958UTA.tar.gz #7
-wget https://www.encodeproject.org/files/ENCFF575DGZ/@@download/ENCFF575DGZ.tar.gz #8
-wget https://www.encodeproject.org/files/ENCFF109FJX/@@download/ENCFF109FJX.tar.gz #9
-tar -xzvf ENCFF401MVS.tar.gz
-tar -xzvf ENCFF946HNM.tar.gz
-tar -xzvf ENCFF904ARJ.tar.gz
-tar -xzvf ENCFF658TEH.tar.gz
-tar -xzvf ENCFF908JHS.tar.gz
-tar -xzvf ENCFF851VTB.tar.gz
-tar -xzvf ENCFF958UTA.tar.gz
-tar -xzvf ENCFF575DGZ.tar.gz
-tar -xzvf ENCFF109FJX.tar.gz
-
-# RNA matrix
 mkdir -p heart_fetal1
-#https://www.encodeproject.org/files/ENCFF887HJU/@@download/ENCFF887HJU.tar.gz
+cd heart_fetal1
+wget https://www.encodeproject.org/files/ENCFF401MVS/@@download/ENCFF401MVS.tar.gz # atac
+tar -xzvf ENCFF401MVS.tar.gz
+mv results/ENCSR515SNH-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv results/ENCSR515SNH-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf results
+rm ENCFF401MVS.tar.gz
 
-mkdir -p heart_fetal2
-#https://www.encodeproject.org/files/ENCFF243UTL/@@download/ENCFF243UTL.tar.gz
+wget https://www.encodeproject.org/files/ENCFF887HJU/@@download/ENCFF887HJU.tar.gz # rna
+tar -xzvf ENCFF887HJU.tar.gz
+mv GeneFull_Ex50pAS/filtered/UniqueAndMult-EM.mtx gex.mtx
+mv GeneFull_Ex50pAS/filtered/barcodes.tsv rna_cells.txt
+mv GeneFull_Ex50pAS/filtered/features.tsv genes.tsv
+rm -rf GeneFull_Ex50pAS
+rm ENCFF887HJU.tar.gz
+cd ..
 
 mkdir -p heart_fetal3
-#https://www.encodeproject.org/files/ENCFF878AEW/@@download/ENCFF878AEW.tar.gz
+cd heart_fetal3
+wget https://www.encodeproject.org/files/ENCFF904ARJ/@@download/ENCFF904ARJ.tar.gz # atac
+tar -xzvf ENCFF904ARJ.tar.gz
+mv results/ENCSR282FAK-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv results/ENCSR282FAK-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf results
+rm ENCFF904ARJ.tar.gz
 
-mkdir -p heart_fetal4
-#https://www.encodeproject.org/files/ENCFF654KZX/@@download/ENCFF654KZX.tar.gz
-
-mkdir -p heart_fetal5
-#https://www.encodeproject.org/files/ENCFF260ZOM/@@download/ENCFF260ZOM.tar.gz
-
-mkdir -p heart_fetal6
-#https://www.encodeproject.org/files/ENCFF807XXG/@@download/ENCFF807XXG.tar.gz
+wget https://www.encodeproject.org/files/ENCFF878AEW/@@download/ENCFF878AEW.tar.gz # rna
+tar -xzvf ENCFF878AEW.tar.gz
+mv GeneFull_Ex50pAS/filtered/UniqueAndMult-EM.mtx gex.mtx
+mv GeneFull_Ex50pAS/filtered/barcodes.tsv rna_cells.txt
+mv GeneFull_Ex50pAS/filtered/features.tsv genes.tsv
+rm -rf GeneFull_Ex50pAS
+rm ENCFF878AEW.tar.gz
+cd ..
 
 mkdir -p heart_fetal7
-#https://www.encodeproject.org/files/ENCFF388YNA/@@download/ENCFF388YNA.tar.gz
+cd heart_fetal7
+wget https://www.encodeproject.org/files/ENCFF958UTA/@@download/ENCFF958UTA.tar.gz # atac
+tar -xzvf ENCFF958UTA.tar.gz
+mv results/ENCSR376IBI-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv results/ENCSR376IBI-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf results
+rm ENCFF958UTA.tar.gz
 
-mkdir -p heart_fetal8
-#https://www.encodeproject.org/files/ENCFF795QHU/@@download/ENCFF795QHU.tar.gz
+wget https://www.encodeproject.org/files/ENCFF388YNA/@@download/ENCFF388YNA.tar.gz # rna
+tar -xzvf ENCFF388YNA.tar.gz
+mv GeneFull_Ex50pAS/filtered/UniqueAndMult-EM.mtx gex.mtx
+mv GeneFull_Ex50pAS/filtered/barcodes.tsv rna_cells.txt
+mv GeneFull_Ex50pAS/filtered/features.tsv genes.tsv
+rm -rf GeneFull_Ex50pAS
+rm ENCFF388YNA.tar.gz
+cd ..
 
 mkdir -p heart_fetal9
-#https://www.encodeproject.org/files/ENCFF930KQD/@@download/ENCFF930KQD.tar.gz
+cd heart_fetal9
+wget https://www.encodeproject.org/files/ENCFF109FJX/@@download/ENCFF109FJX.tar.gz # atac
+tar -xzvf ENCFF109FJX.tar.gz
+mv results/ENCSR805DID-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv results/ENCSR805DID-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf results
+rm ENCFF109FJX.tar.gz
 
-# note: for some reason heart fetal .tar.gz files doesn't have the encode_scatac_dcc_2 folder, it goes straight to results. 
-#       need to make it manually to match directories with other tissues
-mkdir -p encode_scatac_dcc_2
-mv results encode_scatac_dcc_2
-
-# heart_fetal 
-#sample_IDs=("ENCSR515SNH-1" "ENCSR715JSZ-1" "ENCSR282FAK-1" "ENCSR890TGR-1" "ENCSR024TGD-1" "ENCSR004IAY-1" "ENCSR376IBI-1" "ENCSR306FRQ-1" "ENCSR805DID-1")
-#sample_n=("1" "2" "3" "4" "5" "6" "7" "8" "9")
-#cell_type="heart_fetal"
+wget https://www.encodeproject.org/files/ENCFF930KQD/@@download/ENCFF930KQD.tar.gz # rna
+tar -xzvf ENCFF930KQD.tar.gz
+mv GeneFull_Ex50pAS/filtered/UniqueAndMult-EM.mtx gex.mtx
+mv GeneFull_Ex50pAS/filtered/barcodes.tsv rna_cells.txt
+mv GeneFull_Ex50pAS/filtered/features.tsv genes.tsv
+rm -rf GeneFull_Ex50pAS
+rm ENCFF930KQD.tar.gz
+cd ..

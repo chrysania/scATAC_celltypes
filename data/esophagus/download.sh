@@ -1,18 +1,21 @@
-cd ~/scratch/scATAC_celltypes/data/esophagus
+# download esophagus
 
-# ATAC fragments
-wget https://www.encodeproject.org/files/ENCFF026ZEV/@@download/ENCFF026ZEV.tar.gz #1
-wget https://www.encodeproject.org/files/ENCFF623PSE/@@download/ENCFF623PSE.tar.gz #2
-wget https://www.encodeproject.org/files/ENCFF815ESF/@@download/ENCFF815ESF.tar.gz #3
-tar -xzvf ENCFF026ZEV.tar.gz
-tar -xzvf ENCFF623PSE.tar.gz
-tar -xzvf ENCFF815ESF.tar.gz
-
-mkdir -p esophagus1
 mkdir -p esophagus2
-mkdir -p esophagus3
+cd esophagus2
+wget https://www.encodeproject.org/files/ENCFF623PSE/@@download/ENCFF623PSE.tar.gz
+tar -xzvf ENCFF623PSE.tar.gz
+mv encode_scatac_dcc_2/results/ENCSR757EGB-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv encode_scatac_dcc_2/results/ENCSR757EGB-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf encode_scatac_dcc_2
+rm ENCFF623PSE.tar.gz
+cd ..
 
-# esophagus
-#sample_IDs=("ENCSR453TVZ-1" "ENCSR757EGB-1" "ENCSR164GSH-1")
-#sample_n=("1" "2" "3")
-#cell_type="esophagus"
+mkdir -p esophagus3
+cd esophagus3
+wget https://www.encodeproject.org/files/ENCFF815ESF/@@download/ENCFF815ESF.tar.gz
+tar -xzvf ENCFF815ESF.tar.gz
+mv encode_scatac_dcc_2/results/ENCSR164GSH-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv encode_scatac_dcc_2/results/ENCSR164GSH-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf encode_scatac_dcc_2
+rm ENCFF815ESF.tar.gz
+cd ..

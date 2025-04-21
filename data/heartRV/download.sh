@@ -1,55 +1,57 @@
-cd ~/scratch/scATAC_celltypes/data/heartRV
+# download heartRV
 
-# ATAC fragments
-wget https://www.encodeproject.org/files/ENCFF223DBM/@@download/ENCFF223DBM.tar.gz #1
-wget https://www.encodeproject.org/files/ENCFF145ABZ/@@download/ENCFF145ABZ.tar.gz #2
-wget https://www.encodeproject.org/files/ENCFF400OJD/@@download/ENCFF400OJD.tar.gz #3
-wget https://www.encodeproject.org/files/ENCFF075ZCA/@@download/ENCFF075ZCA.tar.gz #4
-wget https://www.encodeproject.org/files/ENCFF358RDK/@@download/ENCFF358RDK.tar.gz #5
-wget https://www.encodeproject.org/files/ENCFF962TJU/@@download/ENCFF962TJU.tar.gz #6
-wget https://www.encodeproject.org/files/ENCFF781VVD/@@download/ENCFF781VVD.tar.gz #7
-wget https://www.encodeproject.org/files/ENCFF717SDD/@@download/ENCFF717SDD.tar.gz #8
-wget https://www.encodeproject.org/files/ENCFF655IKC/@@download/ENCFF655IKC.tar.gz #9
-wget https://www.encodeproject.org/files/ENCFF537KXN/@@download/ENCFF537KXN.tar.gz #10
-tar -xzvf ENCFF223DBM.tar.gz
-tar -xzvf ENCFF145ABZ.tar.gz
-tar -xzvf ENCFF400OJD.tar.gz
-tar -xzvf ENCFF075ZCA.tar.gz
-tar -xzvf ENCFF358RDK.tar.gz
-tar -xzvf ENCFF962TJU.tar.gz
-tar -xzvf ENCFF781VVD.tar.gz
-tar -xzvf ENCFF717SDD.tar.gz
-tar -xzvf ENCFF655IKC.tar.gz
-tar -xzvf ENCFF537KXN.tar.gz
-
-# RNA matrix (1-3 only)
 mkdir -p heartRV1
 cd heartRV1
-wget https://www.encodeproject.org/files/ENCFF757DCI/@@download/ENCFF757DCI.tar.gz
+wget https://www.encodeproject.org/files/ENCFF223DBM/@@download/ENCFF223DBM.tar.gz # atac
+tar -xzvf ENCFF223DBM.tar.gz
+mv encode_scatac_dcc_2/results/ENCSR588PEE-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv encode_scatac_dcc_2/results/ENCSR588PEE-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf encode_scatac_dcc_2
+rm ENCFF223DBM.tar.gz
+
+wget https://www.encodeproject.org/files/ENCFF757DCI/@@download/ENCFF757DCI.tar.gz # rna
 tar -xzvf ENCFF757DCI.tar.gz
+mv GeneFull_Ex50pAS/filtered/UniqueAndMult-EM.mtx gex.mtx
+mv GeneFull_Ex50pAS/filtered/barcodes.tsv rna_cells.txt
+mv GeneFull_Ex50pAS/filtered/features.tsv genes.tsv
+rm -rf GeneFull_Ex50pAS
+rm ENCFF757DCI.tar.gz
 cd .. 
 
 mkdir -p heartRV2
 cd heartRV2
-wget https://www.encodeproject.org/files/ENCFF289QCB/@@download/ENCFF289QCB.tar.gz
+wget https://www.encodeproject.org/files/ENCFF145ABZ/@@download/ENCFF145ABZ.tar.gz # atac
+tar -xzvf ENCFF145ABZ.tar.gz
+mv encode_scatac_dcc_2/results/ENCSR681OLJ-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv encode_scatac_dcc_2/results/ENCSR681OLJ-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf encode_scatac_dcc_2
+rm ENCFF145ABZ.tar.gz
+
+wget https://www.encodeproject.org/files/ENCFF289QCB/@@download/ENCFF289QCB.tar.gz # rna
 tar -xzvf ENCFF289QCB.tar.gz
+mv GeneFull_Ex50pAS/filtered/UniqueAndMult-EM.mtx gex.mtx
+mv GeneFull_Ex50pAS/filtered/barcodes.tsv rna_cells.txt
+mv GeneFull_Ex50pAS/filtered/features.tsv genes.tsv
+rm -rf GeneFull_Ex50pAS
+rm ENCFF289QCB.tar.gz
 cd .. 
 
-mkdir -p heartRV3
-cd heartRV2
-wget https://www.encodeproject.org/files/ENCFF038SVX/@@download/ENCFF038SVX.tar.gz
-tar -xzvf ENCFF038SVX.tar.gz
+mkdir -p heartRV5
+cd heartRV5
+wget https://www.encodeproject.org/files/ENCFF358RDK/@@download/ENCFF358RDK.tar.gz # atac
+tar -xzvf ENCFF358RDK.tar.gz
+mv encode_scatac_dcc_2/results/ENCSR814OLA-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv encode_scatac_dcc_2/results/ENCSR814OLA-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf encode_scatac_dcc_2
+rm ENCFF358RDK.tar.gz
 cd ..
 
-mkdir -p heartRV4
-mkdir -p heartRV5
-mkdir -p heartRV6
-mkdir -p heartRV7
-mkdir -p heartRV8
 mkdir -p heartRV9
-mkdir -p heartRV10
-
-# heartRV (right ventricle)
-#sample_IDs=("ENCSR588PEE-1" "ENCSR681OLJ-1" "ENCSR169BCG-1" "ENCSR604PDO-1" "ENCSR814OLA-1" "ENCSR520ZUD-1" "ENCSR579TPC-1" "ENCSR615TSN-1" "ENCSR517QNQ-1" "ENCSR454YDZ-1")
-#sample_n=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
-#cell_type="heartRV"
+cd heartRV9
+wget https://www.encodeproject.org/files/ENCFF655IKC/@@download/ENCFF655IKC.tar.gz # atac
+tar -xzvf ENCFF655IKC.tar.gz
+mv encode_scatac_dcc_2/results/ENCSR517QNQ-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv encode_scatac_dcc_2/results/ENCSR517QNQ-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+rm -rf encode_scatac_dcc_2
+rm ENCFF655IKC.tar.gz
+cd ..
