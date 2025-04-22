@@ -18,7 +18,8 @@ rm -rf GeneFull_Ex50pAS
 rm ENCFF949IOU.tar.gz
 cd ..
 
-mkdir -p left_colon2
+mkdir -p left_colon3
+cd left_colon3
 wget https://www.encodeproject.org/files/ENCFF826JKT/@@download/ENCFF826JKT.tar.gz # atac
 tar -xzvf ENCFF826JKT.tar.gz
 mv encode_scatac_dcc_2/results/ENCSR916RYB-1/fragments/fragments.tsv.gz fragments.tsv.gz
