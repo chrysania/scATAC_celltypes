@@ -9,8 +9,9 @@ tissue_sample_pairs = [(v["sample_type"], k) for k, v in samples.items()]
 
 rule all:
     input:
-#        expand("objects/{sample}_peaks.rds", sample=sample_names),
-        expand("data/{tissue}/.download_complete", tissue=tissue_set)
+#        expand("data/{tissue}/.download_complete", tissue=tissue_set)
+#        expand("objects/{sample}_peaks.rds", sample=sample_names)
+        expand("data/{tissue}/{sample}/peaks/", zip, tissue=[x[0] for x in tissue_sample_pairs], sample=[x[1] for x in tissue_sample_pairs])
         
 rule download:
     input:
@@ -70,7 +71,7 @@ rule peak_matrix:
     shell:
         """
         fragtk matrix \
-            -f {input.frags} \
+            -f {input.fragments} \
             -c {input.barcodes} \
             -o {output} \
             -b {input.regions} \
@@ -79,7 +80,7 @@ rule peak_matrix:
 
 rule build_object:
     input:
-        done="data/{tissue}/.download_complete",
+        done=lambda wc: f"data/{samples[wc.sample]['sample_type']}/.download_complete",
         frags=lambda wc: f"data/{samples[wc.sample]['sample_type']}/{wc.sample}/fragments.tsv.gz",
         barcodes=lambda wc: f"data/{samples[wc.sample]['sample_type']}/{wc.sample}/barcodes_atac.txt",
         peak_counts=lambda wc: f"data/{samples[wc.sample]['sample_type']}/{wc.sample}/peaks/",
