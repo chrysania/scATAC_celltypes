@@ -22,8 +22,8 @@ mkdir -p left_colon3
 cd left_colon3
 wget https://www.encodeproject.org/files/ENCFF826JKT/@@download/ENCFF826JKT.tar.gz # atac
 tar -xzvf ENCFF826JKT.tar.gz
-mv encode_scatac_dcc_2/results/ENCSR916RYB-1/fragments/fragments.tsv.gz fragments.tsv.gz
-mv encode_scatac_dcc_2/results/ENCSR916RYB-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
+mv encode_scatac_dcc_2/results/ENCSR904WIW-1/fragments/fragments.tsv.gz fragments.tsv.gz
+mv encode_scatac_dcc_2/results/ENCSR904WIW-1/fragments/fragments.tsv.gz.tbi fragments.tsv.gz.tbi
 rm -rf encode_scatac_dcc_2
 rm ENCFF826JKT.tar.gz
 cd ..
