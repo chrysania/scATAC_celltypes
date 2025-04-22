@@ -3,29 +3,31 @@
 import pandas as pd
 
 samples = pd.read_table("config.tsv").set_index("sample_name", drop=False).to_dict(orient='index')
-tissue_names = list(samples.keys())
+sample_names = list(samples.keys())
+tissue_set = sorted({v["sample_type"] for v in samples.values()})
 tissue_sample_pairs = [(v["sample_type"], k) for k, v in samples.items()]
 
 rule all:
     input:
-        expand("objects/{sample}_peaks.rds", sample=[s for t, s in tissue_sample_pairs])
-
+#        expand("objects/{sample}_peaks.rds", sample=sample_names),
+        expand("data/{tissue}/.download_complete", tissue=tissue_set)
         
 rule download:
-    input: "data/{tissue}/download.sh"
-    output: 
-        "data/{tissue}/{sample}/fragments.tsv.gz",
-        "data/{tissue}/{sample}/gex.mtx",
-        "data/{tissue}/{sample}/genes.tsv",
-        "data/{tissue}/{sample}/rna_cells.txt"
+    input:
+        "data/{tissue}/download.sh"
+    output:
+        touch("data/{tissue}/.download_complete")
     shell:
         """
         cd data/{wildcards.tissue}
         sh download.sh
+        touch .download_complete
         """
 
 rule count_barcodes:
-    input: "data/{tissue}/{sample}/fragments.tsv.gz"
+    input:
+        download_done = "data/{tissue}/.download_complete",
+        fragments = "data/{tissue}/{sample}/fragments.tsv.gz"
     output:
         barcode_counts="data/{tissue}/{sample}/barcode_counts.tsv",
         barcodes="data/{tissue}/{sample}/barcodes_atac.txt"
@@ -34,22 +36,23 @@ rule count_barcodes:
     shell:
         """
         fragtk count \
-            -f {input} \
+            -f {input.fragments} \
             -o {output.barcode_counts} \
             -n {params.ncells} \
             > {output.barcodes}
         """
 
 rule call_peaks:
-    input: 
-        "data/{tissue}/{sample}/fragments.tsv.gz"
-    output: 
+    input:
+        download_done = "data/{tissue}/.download_complete",
+        fragments = "data/{tissue}/{sample}/fragments.tsv.gz"
+    output:
         peaks="data/{tissue}/{sample}/peaks.bed"
     shell:
         """
         macs2 callpeak \
             -f BED --nomodel --shift -100 --extsize 200 --name {wildcards.sample} \
-            -t {input} \
+            -t {input.fragments} \
             --outdir data/{wildcards.tissue}/{wildcards.sample}/
 
         # cut narrowPeak to bed file
@@ -58,7 +61,8 @@ rule call_peaks:
 
 rule peak_matrix:
     input:
-        frags="data/{tissue}/{sample}/fragments.tsv.gz",
+        download_done = "data/{tissue}/.download_complete",
+        fragments=lambda wc: f"data/{samples[wc.sample]['sample_type']}/{wc.sample}/fragments.tsv.gz",
         regions="data/{tissue}/{sample}/peaks.bed",
         barcodes="data/{tissue}/{sample}/barcodes_atac.txt"
     output:
@@ -75,17 +79,18 @@ rule peak_matrix:
 
 rule build_object:
     input:
-        frags=lambda wildcards: f"data/{samples[wildcards.sample]['sample_type']}/{wildcards.sample}/fragments.tsv.gz",
-        barcodes=lambda wildcards: f"data/{samples[wildcards.sample]['sample_type']}/{wildcards.sample}/barcodes_atac.txt",
-        peak_counts=lambda wildcards: f"data/{samples[wildcards.sample]['sample_type']}/{wildcards.sample}/peaks/",
+        done="data/{tissue}/.download_complete",
+        frags=lambda wc: f"data/{samples[wc.sample]['sample_type']}/{wc.sample}/fragments.tsv.gz",
+        barcodes=lambda wc: f"data/{samples[wc.sample]['sample_type']}/{wc.sample}/barcodes_atac.txt",
+        peak_counts=lambda wc: f"data/{samples[wc.sample]['sample_type']}/{wc.sample}/peaks/",
         annotations="data/annotations.rds"
     output:
         object="objects/{sample}_peaks.rds"
     params:
-        nCount_ATAC_above=lambda wildcards: samples[wildcards.sample]["nCount_ATAC_above"],
-        nCount_ATAC_below=lambda wildcards: samples[wildcards.sample]["nCount_ATAC_below"],
-        TSS_above=lambda wildcards: samples[wildcards.sample]["TSS_above"],
-        nucleosome_signal=lambda wildcards: samples[wildcards.sample]["nucleosome_signal"]
+        nCount_ATAC_above=lambda wc: samples[wc.sample]["nCount_ATAC_above"],
+        nCount_ATAC_below=lambda wc: samples[wc.sample]["nCount_ATAC_below"],
+        TSS_above=lambda wc: samples[wc.sample]["TSS_above"],
+        nucleosome_signal=lambda wc: samples[wc.sample]["nucleosome_signal"]
     script:
         "code/build_object.R"
 
