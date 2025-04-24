@@ -10,8 +10,8 @@ tissue_sample_pairs = [(v["sample_type"], k) for k, v in samples.items()]
 rule all:
     input:
 #        expand("data/{tissue}/.download_complete", tissue=tissue_set)
-#        expand("objects/{sample}_peaks.rds", sample=sample_names)
-        expand("data/{tissue}/{sample}/peaks/", zip, tissue=[x[0] for x in tissue_sample_pairs], sample=[x[1] for x in tissue_sample_pairs])
+        expand("objects/{sample}_peaks.rds", sample=sample_names)
+#        expand("data/{tissue}/{sample}/peaks/", zip, tissue=[x[0] for x in tissue_sample_pairs], sample=[x[1] for x in tissue_sample_pairs])
         
 rule download:
     input:
@@ -91,7 +91,7 @@ rule build_object:
         nCount_ATAC_above=lambda wc: samples[wc.sample]["nCount_ATAC_above"],
         nCount_ATAC_below=lambda wc: samples[wc.sample]["nCount_ATAC_below"],
         TSS_above=lambda wc: samples[wc.sample]["TSS_above"],
-        nucleosome_signal=lambda wc: samples[wc.sample]["nucleosome_signal"]
+        nucleosome_signal_below=lambda wc: samples[wc.sample]["nucleosome_signal"]
     script:
         "code/build_object.R"
 

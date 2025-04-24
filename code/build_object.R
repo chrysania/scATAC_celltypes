@@ -14,7 +14,7 @@ annotations <- readRDS(snakemake@input[['annotations']])
 nCount_ATAC_above <- as.numeric(snakemake@params[["nCount_ATAC_above"]])
 nCount_ATAC_below <- as.numeric(snakemake@params[["nCount_ATAC_below"]])
 TSS_above <- as.numeric(snakemake@params[["TSS_above"]])
-nucleosome_signal <- as.numeric(snakemake@params[["nucleosome_signal"]])
+nucleosome_signal_below <- as.numeric(snakemake@params[["nucleosome_signal_below"]])
 
 # read counts matrix
 counts <- ReadCounts(peak_counts_dir)
@@ -47,40 +47,10 @@ obj <- FindClusters(obj)
 obj <- TSSEnrichment(obj)
 obj <- NucleosomeSignal(obj)
 
-### debug
-message(class(nCount_ATAC_above))
-message(class(nCount_ATAC_below))
-message(class(TSS_above))
-message(class(nucleosome_signal))
-
-message(print(nCount_ATAC_above))
-message(print(nCount_ATAC_below))
-message(print(TSS_above))
-message(print(nucleosome_signal))
-
-p1 <- DimPlot(obj, reduction = 'umap.atac')
-p2 <- VlnPlot(obj, c("nCount_ATAC", "TSS.enrichment", "nucleosome_signal"), pt.size=0)
-p3 <- DensityScatter(obj, "nCount_ATAC", "TSS.enrichment", log_x = TRUE)
-
-pdf(
-  paste0("~/scratch/scATAC_celltypes/debug_QC.pdf"), 
-  width = 6,      # Width of the PDF in inches
-  height = 6       # Height of the PDF in inches
-)
-p1
-p2
-p3
-dev.off()
-# debug
-
 # ATAC QC
-obj_subset <- subset(obj, subset = nCount_ATAC > nCount_ATAC_above & nCount_ATAC < nCount_ATAC_below &
-                     TSS.enrichment > TSS_above &
-                     nucleosome_signal < nucleosome_signal)
+obj_subset <- subset(obj, subset = nCount_ATAC > nCount_ATAC_above & nCount_ATAC < nCount_ATAC_below & TSS.enrichment > TSS_above & nucleosome_signal < nucleosome_signal_below)
 
-#obj_subset <- subset(obj, subset = nCount_ATAC > 2000 & nCount_ATAC < 30000 &
-#                     TSS.enrichment > 4 &
-#                     nucleosome_signal < 1.5)
+obj_subset
 
 # save object
 saveRDS(obj_subset, file = snakemake@output[['object']])
