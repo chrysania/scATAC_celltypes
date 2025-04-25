@@ -7,11 +7,22 @@ sample_names = list(samples.keys())
 tissue_set = sorted({v["sample_type"] for v in samples.values()})
 tissue_sample_pairs = [(v["sample_type"], k) for k, v in samples.items()]
 
+from statistics import mean
+
+tissue_clustering_resolution = {
+    tissue: mean([
+        v["clustering_resolution"] for k, v in samples.items()
+        if v["sample_type"] == tissue
+    ])
+    for tissue in tissue_set
+}
+
 rule all:
     input:
 #        expand("data/{tissue}/.download_complete", tissue=tissue_set)
-        expand("objects/{sample}_peaks.rds", sample=sample_names)
-#        expand("data/{tissue}/{sample}/peaks/", zip, tissue=[x[0] for x in tissue_sample_pairs], sample=[x[1] for x in tissue_sample_pairs])
+        expand("objects/{sample}_peaks.rds", sample=sample_names),
+        expand("data/{tissue}/{sample}/peaks/", zip, tissue=[x[0] for x in tissue_sample_pairs], sample=[x[1] for x in tissue_sample_pairs]),
+        expand("objects/{tissue}_combined.rds", tissue=tissue_set)
         
 rule download:
     input:
@@ -74,8 +85,8 @@ rule peak_matrix:
             -f {input.fragments} \
             -c {input.barcodes} \
             -o {output} \
-            -b {input.regions} \
-            --pic
+            -b {input.regions} #\
+            #--pic   # there was no --pic option when pseudobulk was first created
         """
 
 rule build_object:
@@ -95,7 +106,24 @@ rule build_object:
     script:
         "code/build_object.R"
 
-#rule combine_object:
+rule combine_object:
+    input:
+        done=lambda wc: [
+            f"data/{samples[s]['sample_type']}/.download_complete"
+            for s in [k for k, v in samples.items() if v["sample_type"] == wc.tissue]
+        ],
+        objects=lambda wc: [
+            f"objects/{s}_peaks.rds"
+            for s in [k for k, v in samples.items() if v["sample_type"] == wc.tissue]
+        ]
+    output:
+        combined="objects/{tissue}_combined.rds",
+        integrated="objects/{tissue}_integrated.rds"
+    params:
+        tissue_name=lambda wc: wc.tissue,
+        clustering_res=lambda wc: tissue_clustering_resolution[wc.tissue]
+    script:
+        "code/combine_objects.R"
 
 # rule annotate_celltypes:
 # todo: annotate celltypes for multiome datasets
