@@ -22,7 +22,8 @@ rule all:
 #        expand("data/{tissue}/.download_complete", tissue=tissue_set)
         expand("objects/{sample}_peaks.rds", sample=sample_names),
         expand("data/{tissue}/{sample}/peaks/", zip, tissue=[x[0] for x in tissue_sample_pairs], sample=[x[1] for x in tissue_sample_pairs]),
-        expand("objects/{tissue}_combined.rds", tissue=tissue_set)
+        expand("objects/{tissue}_combined.rds", tissue=tissue_set),
+        expand("data/pseudobulk/{tissue}_pseudobulk.rds", tissue=tissue_set)
         
 rule download:
     input:
@@ -128,6 +129,28 @@ rule combine_object:
 # rule annotate_celltypes:
 # todo: annotate celltypes for multiome datasets
 
-# end : integrated_{tissue}.rds
+rule tissue_pseudobulk:
+    input:
+        tissue_integrated="objects/{tissue}_integrated.rds"
+    output:
+        pseudobulk="data/pseudobulk/{tissue}_pseudobulk.rds"
+    script:
+        "code/tissue_pseudobulk.R"
+
+#rule combine_tissue_pseudobulk:
+#    input:
+#        adrenal="data/pseudobulk/adrenal_pseudobulk.rds",
+#        esophagus="data/pseudobulk/esophagus_pseudobulk.rds",
+#        heartRV="data/pseudobulk/heartRV_pseudobulk.rds",
+#        heart_fetal="data/pseudobulk/heart_fetal_pseudobulk.rds",
+#        left_colon="data/pseudobulk/left_colon_pseudobulk.rds",
+#        liver="data/pseudobulk/liver_pseudobulk.rds",
+#        psoas_muscle="data/pseudobulk/psoas_muscle_pseudobulk.rds"
+#    output:
+#        tissues_pseudobulk="data/pseudobulk/tissues_pseudobulk.rds"
+#    script:
+#        "code/combine_pseudobulk.R"
+
+# rule split_matrix
 
 
