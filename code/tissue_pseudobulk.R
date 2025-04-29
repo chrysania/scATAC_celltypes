@@ -9,9 +9,6 @@ obj <- readRDS(snakemake@input[['tissue_integrated']])
 tissue_name <- snakemake@params[['tissue_name']]
 clustering_resolution <- as.numeric(snakemake@params[['clustering_resolution']])
 
-message(clustering_resolution)
-message(class(clustering_resolution))
-
 ccre <- read.table("data/combined_cre.bed", sep="\t")
 ccre_gr <- GRanges(seqnames = ccre$V1,
                    ranges = IRanges(start = ccre$V2, end = ccre$V3))
@@ -41,7 +38,8 @@ obj_ccre <- FindClusters(obj_ccre, resolution = clustering_resolution)
 
 # BinaryIdentMatrix
 big_clusters <- names(which(table(Idents(obj_ccre)) >= 100))
-binary_matrix <- Signac:::BinaryIdentMatrix(object = obj_ccre,
+obj_filt <- subset(obj_ccre, idents = big_clusters)
+binary_matrix <- Signac:::BinaryIdentMatrix(object = obj_filt,
                                            idents = big_clusters)
 
 # normalize by number of cells
@@ -49,7 +47,7 @@ rowsum_bm <- rowSums(binary_matrix)
 bm_norm <- (binary_matrix / rowsum_bm) * 1000
 
 # get cell type x ccre matrix
-counts_matrix <- GetAssayData(obj_ccre, assay = 'ATAC', layer = 'data')
+counts_matrix <- GetAssayData(obj_filt, assay = 'ATAC', layer = 'data')
 ct_ccre <- bm_norm %*% t(counts_matrix)
 
 # add rownames
