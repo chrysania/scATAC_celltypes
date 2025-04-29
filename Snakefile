@@ -20,10 +20,11 @@ tissue_clustering_resolution = {
 rule all:
     input:
 #        expand("data/{tissue}/.download_complete", tissue=tissue_set)
-        expand("objects/{sample}_peaks.rds", sample=sample_names),
-        expand("data/{tissue}/{sample}/peaks/", zip, tissue=[x[0] for x in tissue_sample_pairs], sample=[x[1] for x in tissue_sample_pairs]),
-        expand("objects/{tissue}_combined.rds", tissue=tissue_set),
+#        expand("objects/{sample}_peaks.rds", sample=sample_names),
+#        expand("data/{tissue}/{sample}/peaks/", zip, tissue=[x[0] for x in tissue_sample_pairs], sample=[x[1] for x in tissue_sample_pairs]),
+#        expand("objects/{tissue}_combined.rds", tissue=tissue_set),
         expand("data/pseudobulk/{tissue}_pseudobulk.rds", tissue=tissue_set)
+#        "data/pseudobulk/heartRV_pseudobulk.rds"
         
 rule download:
     input:
@@ -134,6 +135,9 @@ rule tissue_pseudobulk:
         tissue_integrated="objects/{tissue}_integrated.rds"
     output:
         pseudobulk="data/pseudobulk/{tissue}_pseudobulk.rds"
+    params:
+        tissue_name=lambda wc: wc.tissue,
+        clustering_resolution=lambda wc: tissue_clustering_resolution[wc.tissue]
     script:
         "code/tissue_pseudobulk.R"
 
