@@ -29,18 +29,13 @@ obj_ccre <- CreateSeuratObject(chrom_assay, assay = "ATAC")
 saveRDS(obj_ccre, file = paste0("objects/",tissue_name,"_ccre.rds"))
 #obj_ccre <- readRDS(paste0("objects/",tissue_name,"_ccre.rds"))
 
-obj_ccre <- RunTFIDF(obj_ccre)
-obj_ccre <- FindTopFeatures(obj_ccre)  
-obj_ccre <- RunSVD(obj_ccre)
-obj_ccre <- RunUMAP(obj_ccre, reduction = 'lsi', dims = 2:20, verbose = FALSE, reduction.name = 'umap.atac')
-obj_ccre <- FindNeighbors(obj_ccre, reduction = "lsi", dims = 2:20)
-obj_ccre <- FindClusters(obj_ccre, resolution = clustering_resolution) 
+obj_ccre$cluster <- obj$seurat_clusters
 
 # BinaryIdentMatrix
 big_clusters <- names(which(table(Idents(obj_ccre)) >= 100))
 obj_filt <- subset(obj_ccre, idents = big_clusters)
-binary_matrix <- Signac:::BinaryIdentMatrix(object = obj_filt,
-                                           idents = big_clusters)
+obj_filt <- SetIdent(obj_filt, value = obj_filt$cluster)
+binary_matrix <- Signac:::BinaryIdentMatrix(object = obj_filt)
 
 # normalize by number of cells
 rowsum_bm <- rowSums(binary_matrix)
